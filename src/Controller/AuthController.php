@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class AuthController extends AbstractController
 {
     /**
-     * @Route("/auth", name="auth")
+     * @Route("api/auth", name="auth")
      */
     public function index(): Response
     {
@@ -24,25 +24,43 @@ class AuthController extends AbstractController
     }
 
     /**
-     * @Route("/auth/register", name="register", methods={"POST"})
+     * @Route("api/auth/register", name="register", methods={"POST"})
      */
     public function register(Request $request, UserPasswordEncoderInterface $encoder)
     {
-        $password = $request->get('password');
+        $name = $request->get('name');
+        $firstname = $request->get('firstname');
         $email = $request->get('email');
-        $user = new User();
-        $user->setPassword($encoder->encodePassword($user, $password));
-        $user->setEmail($email);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($user);
-        $em->flush();
-        return $this->json([
-            'user' => $user->getEmail()
-        ]);
+        $password = $request->get('password');
+        if(!is_null($name) && !is_null($firstname) && !is_null($email) && !is_null($password)){
+            $repository = $this->getDoctrine()->getRepository(User::class);
+            $user = $repository->findOneBy(['email' => 'Keyboard']);
+            if(is_null($user)){
+                $user = new User();
+                $user->setPassword($encoder->encodePassword($user, $password));
+                $user->setFirstname($firstname);
+                $user->setName($name);
+                $user->setEmail($email);
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($user);
+                $em->flush();
+                return $this->json([
+                    'user' => $user->getEmail()
+                ], 201);
+            }else{
+                return $this->json([
+                    'message' => "Cet identifiant existe déjà."
+                ], 409);
+            }
+        }else{
+            return $this->json([
+                'message' => "Certains arguments sont manquants"
+            ], 422);
+        }
     }
 
     /**
-     * @Route("/auth/login", name="login", methods={"POST"})
+     * @Route("api/auth/login", name="login", methods={"POST"})
      */
     public function login(Request $request, UserRepository $userRepository, UserPasswordEncoderInterface $encoder)
     {
@@ -51,8 +69,8 @@ class AuthController extends AbstractController
         ]);
         if (!$user || !$encoder->isPasswordValid($user, $request->get('password'))) {
             return $this->json([
-                'message' => 'email or password is wrong.',
-            ]);
+                'message' => 'Identifiants incorrects.',
+            ], 404);
         }
         $payload = [
             "user" => $user->getUsername(),
