@@ -31,9 +31,15 @@ class Artist
      */
     private $musicGenders;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Event::class, mappedBy="artists")
+     */
+    private $events;
+
     public function __construct()
     {
         $this->musicGenders = new ArrayCollection();
+        $this->events = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -73,6 +79,33 @@ class Artist
     public function removeMusicGender(MusicGender $musicGender): self
     {
         $this->musicGenders->removeElement($musicGender);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Event[]
+     */
+    public function getEvents(): Collection
+    {
+        return $this->events;
+    }
+
+    public function addEvent(Event $event): self
+    {
+        if (!$this->events->contains($event)) {
+            $this->events[] = $event;
+            $event->addArtist($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvent(Event $event): self
+    {
+        if ($this->events->removeElement($event)) {
+            $event->removeArtist($this);
+        }
 
         return $this;
     }
