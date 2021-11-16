@@ -34,7 +34,7 @@ class AuthController extends AbstractController
         $password = $request->get('password');
         if(!is_null($name) && !is_null($firstname) && !is_null($email) && !is_null($password)){
             $repository = $this->getDoctrine()->getRepository(User::class);
-            $user = $repository->findOneBy(['email' => 'Keyboard']);
+            $user = $repository->findOneBy(['email' => $email]);
             if(is_null($user)){
                 $user = new User();
                 $user->setPassword($encoder->encodePassword($user, $password));
