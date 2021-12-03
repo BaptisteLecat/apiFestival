@@ -25,8 +25,15 @@ class JwtAuthenticator extends AbstractGuardAuthenticator
         $this->params = $params;
     }
 
+    /**
+     * Called when authentication is needed, but it's not sent
+     */
     public function start(Request $request, AuthenticationException $authException = null)
     {
+        $data = [
+            'message' => 'Authentication Required'
+        ];
+        return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
     }
 
     /**
@@ -70,6 +77,7 @@ class JwtAuthenticator extends AbstractGuardAuthenticator
 
     public function checkCredentials($credentials, UserInterface $user)
     {
+        return true;
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
