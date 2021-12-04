@@ -7,9 +7,22 @@ use App\Repository\ArtistRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ * normalizationContext={"groups"={"artist:get"}, "skip_null_values" = false },
+ *      attributes={"security"="is_granted('ROLE_USER')"},
+ *      collectionOperations={
+ *          "post"={"security"="is_granted('ROLE_ADMIN')", "denormalization_context"={"groups"="denormalization_artists:post"}},
+ *          "get"={"groups"={"artists:get"}, "security"="is_granted('ROLE_USER')"},
+ *      },
+ *      itemOperations={
+ *          "get"={"groups"={"artist:get"}, "security"="is_granted('ROLE_USER')"},
+ *          "put"={"groups"={"artist:put"}, "security"="is_granted('ROLE_ADMIN')", "denormalization_context"={"groups"="denormalization_artist:put"}},
+ *          "delete"={"security"="is_granted('ROLE_ADMIN')"},
+ *      }
+ * )
  * @ORM\Entity(repositoryClass=ArtistRepository::class)
  */
 class Artist
@@ -18,21 +31,25 @@ class Artist
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"artists:get", "artist:get", "musicgender:get", "event:get"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"artists:get", "artist:get", "denormalization_artist:put", "denormalization_artists:post", "musicgender:get", "event:get"})
      */
     private $name;
 
     /**
      * @ORM\ManyToMany(targetEntity=MusicGender::class, inversedBy="artists")
+     * @Groups({"artists:get", "artist:get", "denormalization_artist:put", "denormalization_artists:post", "event:get"})
      */
     private $musicGenders;
 
     /**
      * @ORM\ManyToMany(targetEntity=Event::class, mappedBy="artists")
+     * @Groups({"artists:get", "artist:get", "denormalization_artist:put"})
      */
     private $events;
 

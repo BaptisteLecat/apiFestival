@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *      },
  *      itemOperations={
  *          "get"={"groups"={"user:get"}, "security"="is_granted('ROLE_ADMIN') or object == user"},
- *          "put"={"groups"={"user:put"}, "security"="is_granted('ROLE_ADMIN')", "denormalization_context"={"groups"="denormalization_user:put"}},
+ *          "put"={"groups"={"user:put"}, "security"="is_granted('ROLE_ADMIN') or object == user", "denormalization_context"={"groups"="denormalization_user:put"}},
  *          "delete"={"security"="is_granted('ROLE_ADMIN')"},
  *      }
  * )
@@ -34,25 +34,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"users:get", "user:get", "title:get"})
+     * @Groups({"users:get", "user:get"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=250)
-     * @Groups({"users:get", "user:get", "denormalization_users:post", "title:get"})
+     * @Groups({"users:get", "user:get", "denormalization_users:post", "denormalization_user:put"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=250)
-     * @Groups({"users:get", "user:get", "denormalization_users:post"})
+     * @Groups({"users:get", "user:get", "denormalization_users:post", "denormalization_user:put"})
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=250, unique=true)
-     * @Groups({"users:get", "user:get", "denormalization_users:post"})
+     * @Groups({"users:get", "user:get", "denormalization_users:post", "denormalization_user:put"})
      */
     private $email;
 
