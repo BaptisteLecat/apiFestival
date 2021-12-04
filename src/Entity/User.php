@@ -2,44 +2,77 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ * normalizationContext={"groups"={"user:get"}, "skip_null_values" = false },
+ *      attributes={"security"="is_granted('ROLE_USER')"},
+ *      collectionOperations={
+ *          "post"={"security"="is_granted('ROLE_ADMIN')", "denormalization_context"={"groups"="denormalization_users:post"}},
+ *          "get"={"groups"={"users:get"}, "security"="is_granted('ROLE_ADMIN')"},
+ *      },
+ *      itemOperations={
+ *          "get"={"groups"={"user:get"}, "security"="is_granted('ROLE_ADMIN') or object == user"},
+ *          "put"={"groups"={"user:put"}, "security"="is_granted('ROLE_ADMIN')", "denormalization_context"={"groups"="denormalization_user:put"}},
+ *          "delete"={"security"="is_granted('ROLE_ADMIN')"},
+ *      }
+ * )
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
  */
-class User implements UserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"users:get", "user:get", "title:get"})
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=250)
+     * @Groups({"users:get", "user:get", "denormalization_users:post", "title:get"})
      */
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=250)
+     * @Groups({"users:get", "user:get", "denormalization_users:post"})
      */
     private $firstname;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=250, unique=true)
+     * @Groups({"users:get", "user:get", "denormalization_users:post"})
      */
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="json")
+     * @Groups({"users:get", "user:get", "user:put", "denormalization_user:put"})
+     */
+    private $roles = [];
+
+    /**
+     * @var string The hashed password
+     * @ORM\Column(type="string")
+     * @Groups({"denormalization_users:post"})
      */
     private $password;
+
+    public function __construct()
+    {
+        $this->title = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -82,7 +115,47 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getPassword(): ?string
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @deprecated since Symfony 5.3, use getUserIdentifier instead
+     */
+    public function getUsername(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -94,28 +167,23 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getUsername()
+    /**
+     * Returning a salt is only needed, if you are not using a modern
+     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+     *
+     * @see UserInterface
+     */
+    public function getSalt(): ?string
     {
-        return $this->email;
-    }
-
-    public function getSalt()
-    {
-        // you *may* need a real salt depending on your encoder
-        // see section on salt below
         return null;
     }
 
-    public function getRoles()
-    {
-        return array('ROLE_USER');
-    }
-
+    /**
+     * @see UserInterface
+     */
     public function eraseCredentials()
     {
-    }
-    
-    public function getUserIdentifier()
-    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 }
