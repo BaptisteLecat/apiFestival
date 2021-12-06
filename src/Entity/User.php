@@ -41,6 +41,11 @@ class User implements UserInterface
      */
     private $password;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $jwt;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -117,5 +122,17 @@ class User implements UserInterface
     
     public function getUserIdentifier()
     {
+    }
+
+    public function getJwt(): ?string
+    {
+        return $this->jwt;
+    }
+
+    public function setJwt(?string $jwt): self
+    {
+        $this->jwt = $jwt;
+
+        return $this;
     }
 }
