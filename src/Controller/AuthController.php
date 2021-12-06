@@ -73,12 +73,13 @@ class AuthController extends AbstractController
             ], 404);
         }
         $payload = [
-            "user" => $user->getUsername(),
+            "user" => $user->getUserIdentifier(),
             "exp"  => (new \DateTime())->modify("+30 day")->getTimestamp(),
         ];
 
 
         $jwt = JWT::encode($payload, $this->getParameter('jwt_secret'), 'HS256');
-        return $this->json($user);
+        $user->setJwt($jwt);
+        return $this->json(["user" => $user, "jwt" => $user->getJwt()]);
     }
 }
