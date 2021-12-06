@@ -51,7 +51,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $firstname;
 
     /**
-     * @ORM\Column(type="string", length=250, unique=true)
+     * @ORM\Column(type="string", length=191, unique=true)
      * @Groups({"users:get", "user:get", "denormalization_users:post", "denormalization_user:put"})
      */
     private $email;
