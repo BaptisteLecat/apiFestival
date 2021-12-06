@@ -69,10 +69,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $password;
 
-    public function __construct()
-    {
-        $this->title = new ArrayCollection();
-    }
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $jwt;
 
     public function getId(): ?int
     {
@@ -185,5 +185,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getJwt(): ?string
+    {
+        return $this->jwt;
+    }
+
+    public function setJwt(?string $jwt): self
+    {
+        $this->jwt = $jwt;
+
+        return $this;
     }
 }
