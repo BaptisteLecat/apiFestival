@@ -80,6 +80,6 @@ class AuthController extends AbstractController
 
         $jwt = JWT::encode($payload, $this->getParameter('jwt_secret'), 'HS256');
         $user->setJwt($jwt);
-        return $this->json(["user" => $user, "jwt" => $user->getJwt()]);
+        return $this->json(["id" => $user->getId(), "name" => $user->getName(), "firstname" => $user->getFirstname(), "email" => $user->getEmail(), "roles" => $user->getRoles(), "jwt" => $user->getJwt()]);
     }
 }
