@@ -98,6 +98,11 @@ class AuthController extends AbstractController
             $this->em->flush();
         }else{
             $user = $this->getUser();
+            if (!$user) {
+                return $this->json([
+                    'message' => 'Identifiants incorrects.',
+                ], 404);
+            }
         }
         return $this->json(["id" => $user->getId(), "name" => $user->getName(), "firstname" => $user->getFirstname(), "email" => $user->getEmail(), "roles" => $user->getRoles(), "jwt" => $user->getJwt()]);
     }
