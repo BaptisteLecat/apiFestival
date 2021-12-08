@@ -59,6 +59,12 @@ class Event
      */
     private $name;
 
+    /**
+     * @ORM\Column(type="date")
+     * @Groups({"events:get", "event:get", "denormalization_event:put", "denormalization_events:post", "artist:get"})
+     */
+    private $endDate;
+
     public function __construct()
     {
         $this->artists = new ArrayCollection();
@@ -125,6 +131,18 @@ class Event
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getEndDate(): ?\DateTimeInterface
+    {
+        return $this->endDate;
+    }
+
+    public function setEndDate(\DateTimeInterface $endDate): self
+    {
+        $this->endDate = $endDate;
 
         return $this;
     }
