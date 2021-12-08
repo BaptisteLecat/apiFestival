@@ -53,6 +53,11 @@ class Artist
      */
     private $events;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $picture;
+
     public function __construct()
     {
         $this->musicGenders = new ArrayCollection();
@@ -123,6 +128,18 @@ class Artist
         if ($this->events->removeElement($event)) {
             $event->removeArtist($this);
         }
+
+        return $this;
+    }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?string $picture): self
+    {
+        $this->picture = $picture;
 
         return $this;
     }

@@ -47,6 +47,11 @@ class Event
      */
     private $date;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $picture;
+
     public function __construct()
     {
         $this->artists = new ArrayCollection();
@@ -89,6 +94,18 @@ class Event
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?string $picture): self
+    {
+        $this->picture = $picture;
 
         return $this;
     }
