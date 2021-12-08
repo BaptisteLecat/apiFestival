@@ -49,11 +49,13 @@ class Event
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"events:get", "event:get", "denormalization_event:put", "denormalization_events:post", "artist:get"})
      */
     private $picture;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"events:get", "event:get", "denormalization_event:put", "denormalization_events:post", "artist:get"})
      */
     private $name;
 

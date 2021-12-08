@@ -55,6 +55,7 @@ class Artist
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"artists:get", "artist:get", "denormalization_artist:put", "denormalization_artists:post", "event:get"})
      */
     private $picture;
 
