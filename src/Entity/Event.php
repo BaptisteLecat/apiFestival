@@ -65,9 +65,16 @@ class Event
      */
     private $endDate;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=MusicGender::class, inversedBy="yes")
+     * @Groups({"events:get", "event:get", "denormalization_event:put"})
+     */
+    private $musicgenders;
+
     public function __construct()
     {
         $this->artists = new ArrayCollection();
+        $this->musicgenders = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -143,6 +150,30 @@ class Event
     public function setEndDate(\DateTimeInterface $endDate): self
     {
         $this->endDate = $endDate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|MusicGender[]
+     */
+    public function getMusicgenders(): Collection
+    {
+        return $this->musicgenders;
+    }
+
+    public function addMusicgender(MusicGender $musicgender): self
+    {
+        if (!$this->musicgenders->contains($musicgender)) {
+            $this->musicgenders[] = $musicgender;
+        }
+
+        return $this;
+    }
+
+    public function removeMusicgender(MusicGender $musicgender): self
+    {
+        $this->musicgenders->removeElement($musicgender);
 
         return $this;
     }
