@@ -108,7 +108,7 @@ class MusicGender
      */
     public function getEvents(): Collection
     {
-        return $this->event;
+        return $this->events;
     }
 
     public function addEvent(Event $event): self
