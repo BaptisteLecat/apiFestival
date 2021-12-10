@@ -74,6 +74,24 @@ class Event
      */
     private $musicgenders;
 
+    /**
+     * @ORM\Column(type="text")
+     * @Groups({"events:get", "event:get", "denormalization_event:put", "denormalization_events:post", "artist:get"})
+     */
+    private $description;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     *  @Groups({"events:get", "event:get", "denormalization_event:put", "denormalization_events:post", "artist:get"})
+     */
+    private $latitude;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     *  @Groups({"events:get", "event:get", "denormalization_event:put", "denormalization_events:post", "artist:get"})
+     */
+    private $longitude;
+
     public function __construct()
     {
         $this->artists = new ArrayCollection();
@@ -177,6 +195,42 @@ class Event
     public function removeMusicgender(MusicGender $musicgender): self
     {
         $this->musicgenders->removeElement($musicgender);
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getLatitude(): ?float
+    {
+        return $this->latitude;
+    }
+
+    public function setLatitude(?float $latitude): self
+    {
+        $this->latitude = $latitude;
+
+        return $this;
+    }
+
+    public function getLongitude(): ?float
+    {
+        return $this->longitude;
+    }
+
+    public function setLongitude(?float $longitude): self
+    {
+        $this->longitude = $longitude;
 
         return $this;
     }
