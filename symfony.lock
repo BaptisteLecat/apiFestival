@@ -132,9 +132,6 @@
     "phpdocumentor/type-resolver": {
         "version": "1.5.1"
     },
-    "picqer/php-barcode-generator": {
-        "version": "v2.2.0"
-    },
     "psr/cache": {
         "version": "1.0.1"
     },
