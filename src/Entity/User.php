@@ -74,6 +74,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $jwt;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Barcode::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $barcodes;
+
+    public function __construct()
+    {
+        $this->barcodes = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -195,6 +205,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setJwt(?string $jwt): self
     {
         $this->jwt = $jwt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Barcode[]
+     */
+    public function getBarcodes(): Collection
+    {
+        return $this->barcodes;
+    }
+
+    public function addBarcode(Barcode $barcode): self
+    {
+        if (!$this->barcodes->contains($barcode)) {
+            $this->barcodes[] = $barcode;
+            $barcode->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBarcode(Barcode $barcode): self
+    {
+        if ($this->barcodes->removeElement($barcode)) {
+            // set the owning side to null (unless already changed)
+            if ($barcode->getUser() === $this) {
+                $barcode->setUser(null);
+            }
+        }
 
         return $this;
     }

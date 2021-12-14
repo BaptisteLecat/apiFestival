@@ -92,10 +92,16 @@ class Event
      */
     private $longitude;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Barcode::class, mappedBy="event", orphanRemoval=true)
+     */
+    private $barcodes;
+
     public function __construct()
     {
         $this->artists = new ArrayCollection();
         $this->musicgenders = new ArrayCollection();
+        $this->barcodes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -231,6 +237,36 @@ class Event
     public function setLongitude(?float $longitude): self
     {
         $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Barcode[]
+     */
+    public function getBarcodes(): Collection
+    {
+        return $this->barcodes;
+    }
+
+    public function addBarcode(Barcode $barcode): self
+    {
+        if (!$this->barcodes->contains($barcode)) {
+            $this->barcodes[] = $barcode;
+            $barcode->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBarcode(Barcode $barcode): self
+    {
+        if ($this->barcodes->removeElement($barcode)) {
+            // set the owning side to null (unless already changed)
+            if ($barcode->getEvent() === $this) {
+                $barcode->setEvent(null);
+            }
+        }
 
         return $this;
     }
