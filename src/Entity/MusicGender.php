@@ -47,9 +47,16 @@ class MusicGender
      */
     private $artists;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Event::class, mappedBy="musicgenders")
+     * @Groups({"musicgenders:get", "musicgender:get", "denormalization_musicgender:put"})
+     */
+    private $events;
+
     public function __construct()
     {
         $this->artists = new ArrayCollection();
+        $this->events = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -91,6 +98,33 @@ class MusicGender
     {
         if ($this->artists->removeElement($artist)) {
             $artist->removeMusicGender($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Event[]
+     */
+    public function getEvents(): Collection
+    {
+        return $this->events;
+    }
+
+    public function addEvent(Event $event): self
+    {
+        if (!$this->events->contains($event)) {
+            $this->events[] = $event;
+            $event->addMusicgender($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvent(Event $event): self
+    {
+        if ($this->event->removeElement($event)) {
+            $event->removeMusicgender($this);
         }
 
         return $this;
