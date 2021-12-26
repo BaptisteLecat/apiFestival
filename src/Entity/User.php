@@ -34,25 +34,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"users:get", "user:get"})
+     * @Groups({"users:get", "user:get","barcode:get"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=250)
-     * @Groups({"users:get", "user:get", "denormalization_users:post", "denormalization_user:put"})
+     * @Groups({"users:get", "user:get", "denormalization_users:post", "denormalization_user:put","barcode:get"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=250)
-     * @Groups({"users:get", "user:get", "denormalization_users:post", "denormalization_user:put"})
+     * @Groups({"users:get", "user:get", "denormalization_users:post", "denormalization_user:put","barcode:get"})
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=191, unique=true)
-     * @Groups({"users:get", "user:get", "denormalization_users:post", "denormalization_user:put"})
+     * @Groups({"users:get", "user:get", "denormalization_users:post", "denormalization_user:put","barcode:get"})
      */
     private $email;
 

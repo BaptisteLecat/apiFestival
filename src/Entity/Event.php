@@ -34,31 +34,31 @@ class Event
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"events:get", "event:get", "artist:get"})
+     * @Groups({"events:get", "event:get", "artist:get","barcode:get"})
      */
     private $id;
 
     /**
      * @ORM\ManyToMany(targetEntity=Artist::class, inversedBy="events")
-     * @Groups({"events:get", "event:get", "denormalization_event:put", "denormalization_events:post"})
+     * @Groups({"events:get", "event:get", "denormalization_event:put", "denormalization_events:post","barcode:get"})
      */
     private $artists;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"events:get", "event:get", "denormalization_event:put", "denormalization_events:post", "artist:get"})
+     * @Groups({"events:get", "event:get", "denormalization_event:put", "denormalization_events:post", "artist:get","barcode:get"})
      */
     private $date;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"events:get", "event:get", "denormalization_event:put", "denormalization_events:post", "artist:get"})
+     * @Groups({"events:get", "event:get", "denormalization_event:put", "denormalization_events:post", "artist:get","barcode:get"})
      */
     private $picture;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"events:get", "event:get", "denormalization_event:put", "denormalization_events:post", "artist:get"})
+     * @Groups({"events:get", "event:get", "denormalization_event:put", "denormalization_events:post", "artist:get","barcode:get"})
      */
     private $name;
 
@@ -70,13 +70,13 @@ class Event
 
     /**
      * @ORM\ManyToMany(targetEntity=MusicGender::class, inversedBy="yes")
-     * @Groups({"events:get", "event:get", "denormalization_event:put"})
+     * @Groups({"events:get", "event:get", "denormalization_event:put","barcode:get"})
      */
     private $musicgenders;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"events:get", "event:get", "denormalization_event:put", "denormalization_events:post", "artist:get"})
+     * @Groups({"events:get", "event:get", "denormalization_event:put", "denormalization_events:post", "artist:get","barcode:get"})
      */
     private $description;
 
@@ -94,6 +94,7 @@ class Event
 
     /**
      * @ORM\OneToMany(targetEntity=Barcode::class, mappedBy="event", orphanRemoval=true)
+     * @Groups({"events:get", "event:get", "artist:get"})
      */
     private $barcodes;
 

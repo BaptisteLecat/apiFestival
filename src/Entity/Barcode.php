@@ -5,9 +5,21 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\BarcodeRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ * normalizationContext={"groups"={"barcode:get"}, "skip_null_values" = false },
+ *      attributes={"security"="is_granted('ROLE_ADMIN')"},
+ *      collectionOperations={
+ *          "get"={"groups"={"barcodes:get"}, "security"="is_granted('ROLE_ADMIN')"},
+ *      },
+ *      itemOperations={
+ *          "get"={"groups"={"barcode:get"}, "security"="is_granted('ROLE_ADMIN') or object.getUser() == user"},
+ *          "put"={"groups"={"barcode:put"}, "security"="is_granted('ROLE_ADMIN')", "denormalization_context"={"groups"="denormalization_barcode:put"}},
+ *          "delete"={"security"="is_granted('ROLE_ADMIN') or object.getUser() == user"},
+ *      }
+ * )
  * @ORM\Entity(repositoryClass=BarcodeRepository::class)
  */
 class Barcode
@@ -16,38 +28,45 @@ class Barcode
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"barcodes:get","barcode:get", "barcode:put", "event:get"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"barcodes:get","barcode:get", "barcode:put", "denormalization_barcode:put"})
      */
     private $code;
 
     /**
      * @ORM\ManyToOne(targetEntity=Event::class, inversedBy="barcodes")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"barcodes:get","barcode:get", "barcode:put", "denormalization_barcode:put"})
      */
     private $event;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="barcodes")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"barcodes:get","barcode:get", "barcode:put", "denormalization_barcode:put"})
      */
     private $user;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"barcodes:get","barcode:get", "barcode:put", "denormalization_barcode:put", "event:get"})
      */
     private $expirationDate;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"barcodes:get","barcode:get", "barcode:put", "denormalization_barcode:put"})
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"barcodes:get","barcode:get", "barcode:put", "denormalization_barcode:put"})
      */
     private $firstname;
 
