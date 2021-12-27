@@ -14,6 +14,7 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 class JwtAuthenticator extends AbstractGuardAuthenticator
 {
@@ -75,16 +76,37 @@ class JwtAuthenticator extends AbstractGuardAuthenticator
             throw new AuthenticationException($exception->getMessage());
         }
     }
-
+    
     public function checkCredentials($credentials, UserInterface $user)
     {
-        return true;
+        $success = false;
+        $credentials = str_replace('Bearer ', '', $credentials);
+        $jwt = (array) JWT::decode(
+            $credentials,
+            $this->params->get('jwt_secret'),
+            ['HS256']
+        );
+        $user = $this->em->getRepository(User::class)
+        ->findOneBy([
+            'email' => $jwt['user'],
+        ]);
+        if(!is_null($user)){
+            if($user->getJwt() == $credentials){
+                $success = true;
+            }
+        }
+
+        return $success;
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
+        $message = $exception->getMessage();
+        if($exception instanceof BadCredentialsException){
+            $message = "Ce token n'est plus valide";
+        }
         return new JsonResponse([
-            'message' => $exception->getMessage()
+            'message' => $message
         ], Response::HTTP_UNAUTHORIZED);
     }
 
