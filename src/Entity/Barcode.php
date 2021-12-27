@@ -6,13 +6,14 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\BarcodeRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use App\Annotation\UserAware;
 
 /**
  * @ApiResource(
  * normalizationContext={"groups"={"barcode:get"}, "skip_null_values" = false },
  *      attributes={"security"="is_granted('ROLE_ADMIN')"},
  *      collectionOperations={
- *          "get"={"groups"={"barcodes:get"}, "security"="is_granted('ROLE_ADMIN')"},
+ *          "get"={"groups"={"barcodes:get"}, "security"="is_granted('ROLE_USER')"},
  *      },
  *      itemOperations={
  *          "get"={"groups"={"barcode:get"}, "security"="is_granted('ROLE_ADMIN') or object.getUser() == user"},
@@ -21,6 +22,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *      }
  * )
  * @ORM\Entity(repositoryClass=BarcodeRepository::class)
+ * @UserAware(fieldName="user_id")
  */
 class Barcode
 {
