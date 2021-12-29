@@ -35,7 +35,7 @@ class Barcode
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=255)
      * @Groups({"barcodes:get","barcode:get", "barcode:put", "denormalization_barcode:put"})
      */
     private $code;
