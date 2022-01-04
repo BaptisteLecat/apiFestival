@@ -100,7 +100,7 @@ class Event
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"events:get", "event:get", "denormalization_event:put", "denormalization_events:post", "artist:get","barcode:get"})
+     * @Groups({"events:get", "event:get", "denormalization_event:put", "denormalization_events:post", "artist:get"})
      */
     private $price;
 
