@@ -70,7 +70,7 @@ class Event
 
     /**
      * @ORM\ManyToMany(targetEntity=MusicGender::class, inversedBy="yes")
-     * @Groups({"events:get", "event:get", "denormalization_event:put"})
+     * @Groups({"events:get", "event:get", "denormalization_event:put", "denormalization_events:post","barcode:get"})
      */
     private $musicgenders;
 
