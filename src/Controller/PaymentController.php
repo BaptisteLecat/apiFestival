@@ -84,6 +84,7 @@ class PaymentController extends AbstractController
                 $barcode->setUser($payment->getUser());
                 $barcode->setLastname($payment->getUser()->getName());
                 $barcode->setFirstname($payment->getUser()->getFirstname());
+                $barcode->setExpirationDate($payment->getEvent()->getEndDate()->modify("+1 day"));
 
                 $this->em->persist($barcode);
                 $this->em->flush();
