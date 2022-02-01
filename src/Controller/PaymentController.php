@@ -35,7 +35,7 @@ class PaymentController extends AbstractController
     {
         $this->params               = $params;
         $this->serializer           = $serializer;
-        $this->rm = $entityManager;
+        $this->em = $entityManager;
     }
 
     /**
