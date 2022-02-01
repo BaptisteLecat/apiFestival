@@ -17,7 +17,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  * @ApiFilter(SearchFilter::class, properties={"session": "exact"}) 
  * @ORM\Entity(repositoryClass=PaymentRepository::class)
  */
-class Payment
+class Payment implements OwnerForceInterface
 {
     /**
      * @ORM\Id
