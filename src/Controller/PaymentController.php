@@ -62,8 +62,8 @@ class PaymentController extends AbstractController
 
         if ($payment) {
             // Mauvais montant
-            if (strval($data['data']['object']['amount']) != strval($payment->amount * 100)) {
-                throw new \Exception('Bad Amount!' . $data['data']['object']['amount'] . ' / ' . ($payment->amount * 100));
+            if (strval($data['data']['object']['amount']) != strval($payment->getAmount() * 100)) {
+                throw new \Exception('Bad Amount!' . $data['data']['object']['amount'] . ' / ' . ($payment->getAmount() * 100));
             }
 
             if ($data['type'] != 'payment_intent.succeeded') {
