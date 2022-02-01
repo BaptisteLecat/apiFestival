@@ -79,7 +79,7 @@ class OwnerForceNormalizer implements ContextAwareNormalizerInterface, ContextAw
             $objectInfo = new ReflectionClass($type);
             try {
                 $objectInfo->getProperty('user');
-                $object->user = $user;
+                $object->setUser($user);
             } catch (ReflectionException $e) {
 
             }
