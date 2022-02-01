@@ -71,18 +71,16 @@ class OwnerForceNormalizer implements ContextAwareNormalizerInterface, ContextAw
         $context['owner_force'] = true;
         $object = $this->serializer->denormalize($data, $type, $format, $context);
 
-        if (!$this->authorizationChecker->isGranted('ROLE_ADMIN')) {
-            if (!$token = $this->tokenStorage->getToken()) {
-                return null;
-            }
-            $user = $token->getUser();
-            $objectInfo = new ReflectionClass($type);
-            try {
-                $objectInfo->getProperty('user');
-                $object->setUser($user);
-            } catch (ReflectionException $e) {
-
-            }
+        if (!$token = $this->tokenStorage->getToken()) {
+            return null;
+        }
+        $user = $token->getUser();
+        $objectInfo = new ReflectionClass($type);
+        try {
+            $objectInfo->getProperty('user');
+            $object->setUser($user);
+        } catch (ReflectionException $e) {
+            
         }
         return $object;
     }
