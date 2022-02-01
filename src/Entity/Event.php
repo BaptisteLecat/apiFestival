@@ -64,7 +64,7 @@ class Event
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({"events:get", "event:get", "denormalization_event:put", "denormalization_events:post", "artist:get"})
+     * @Groups({"events:get", "event:get", "denormalization_event:put", "denormalization_events:post", "artist:get","barcode:get"})
      */
     private $endDate;
 

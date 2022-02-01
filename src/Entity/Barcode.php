@@ -77,12 +77,12 @@ class Barcode
         return $this->id;
     }
 
-    public function getCode(): ?int
+    public function getCode(): ?String
     {
         return $this->code;
     }
 
-    public function setCode(int $code): self
+    public function setCode(String $code): self
     {
         $this->code = $code;
 
