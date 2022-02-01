@@ -2,22 +2,22 @@
 
 namespace App\Serializer\Normalizer;
 
-use App\Entity\OwnerForceInterface;
+use ReflectionClass;
 use App\Entity\Reseller;
 
-use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\SerializerAwareInterface;
-use Symfony\Component\Serializer\SerializerAwareTrait;
+use ReflectionException;
+use App\Entity\OwnerForceInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\SerializerAwareTrait;
+use Symfony\Component\Serializer\SerializerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+
 use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ContextAwareDenormalizerInterface;
-
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-
-use Roave\BetterReflection\BetterReflection;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * This class allow to set by default the property USER = current user : of the class who implements this interface
@@ -29,13 +29,11 @@ class OwnerForceNormalizer implements ContextAwareNormalizerInterface, ContextAw
 
     private $tokenStorage;
     private $authorizationChecker;
-    private $reflector;
 
-    public function __construct(TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker, BetterReflection $reflector)
+    public function __construct(TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker)
     {
         $this->tokenStorage = $tokenStorage;
         $this->authorizationChecker = $authorizationChecker;
-        $this->reflector = $reflector;
     }
 
     /**
@@ -78,9 +76,12 @@ class OwnerForceNormalizer implements ContextAwareNormalizerInterface, ContextAw
                 return null;
             }
             $user = $token->getUser();
-            $objectInfo = $this->reflector->classReflector()->reflect($type);
-            if ($objectInfo->hasProperty('user')) {
+            $objectInfo = new ReflectionClass($type);
+            try {
+                $objectInfo->getProperty('user');
                 $object->user = $user;
+            } catch (ReflectionException $e) {
+
             }
         }
         return $object;
