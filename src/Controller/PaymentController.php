@@ -39,7 +39,7 @@ class PaymentController extends AbstractController
     }
 
     /**
-     * @Route("/payment/stripe-hook", name="payment_stripe_hook",  methods={"GET","POST"})
+     * @Route("api/payment/stripe-hook", name="payment_stripe_hook",  methods={"GET","POST"})
      */
     public function stripeHook(Request $request, PaymentRepository $paymentRepository)
     {
