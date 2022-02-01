@@ -16,6 +16,7 @@
         "firebase/php-jwt": "^5.5",
         "nelmio/cors-bundle": "^2.1",
         "phpdocumentor/reflection-docblock": "^5.3",
+        "roave/better-reflection": "^4.12",
         "symfony/asset": "5.3.*",
         "symfony/console": "5.3.*",
         "symfony/dotenv": "5.3.*",
